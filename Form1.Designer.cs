@@ -36,8 +36,7 @@
             label2 = new Label();
             textBox1 = new TextBox();
             label3 = new Label();
-            label4 = new Label();
-            textBox2 = new TextBox();
+            comboBox1 = new ComboBox();
             SuspendLayout();
             // 
             // listBox1
@@ -58,6 +57,7 @@
             listBox2.Name = "listBox2";
             listBox2.Size = new Size(252, 244);
             listBox2.TabIndex = 1;
+            listBox2.SelectedIndexChanged += listBox2_SelectedIndexChanged;
             // 
             // button1
             // 
@@ -118,31 +118,21 @@
             label3.Text = "search for file on disk C:";
             label3.Click += label3_Click;
             // 
-            // label4
+            // comboBox1
             // 
-            label4.AutoSize = true;
-            label4.Location = new Point(394, 294);
-            label4.Name = "label4";
-            label4.Size = new Size(133, 15);
-            label4.TabIndex = 9;
-            label4.Text = "search for file on disk D:";
-            label4.Click += label4_Click;
-            // 
-            // textBox2
-            // 
-            textBox2.Location = new Point(394, 312);
-            textBox2.Multiline = true;
-            textBox2.Name = "textBox2";
-            textBox2.Size = new Size(252, 38);
-            textBox2.TabIndex = 8;
+            comboBox1.DisplayMember = "D:\\";
+            comboBox1.FormattingEnabled = true;
+            comboBox1.Location = new Point(330, 317);
+            comboBox1.Name = "comboBox1";
+            comboBox1.Size = new Size(121, 23);
+            comboBox1.TabIndex = 8;
             // 
             // Form1
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(736, 450);
-            Controls.Add(label4);
-            Controls.Add(textBox2);
+            Controls.Add(comboBox1);
             Controls.Add(label3);
             Controls.Add(textBox1);
             Controls.Add(label2);
@@ -167,7 +157,6 @@
         private Label label2;
         private TextBox textBox1;
         private Label label3;
-        private Label label4;
-        private TextBox textBox2;
+        private ComboBox comboBox1;
     }
 }

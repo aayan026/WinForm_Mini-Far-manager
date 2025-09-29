@@ -13,8 +13,10 @@ namespace WinFormsApp1
         }
         private void Form1_Load(object sender, EventArgs e)
         {
+            comboBox1.Items.Add("D:\\");
+            comboBox1.Items.Add("C:\\");
+            comboBox1.SelectedIndex = 1;
             LoadFiles(@"D:\", listBox1);
-
             LoadFiles(@"C:\", listBox2);
         }
 
@@ -37,32 +39,67 @@ namespace WinFormsApp1
                 MessageBox.Show(ex.Message);
             }
         }
+
         private void button1_Click(object sender, EventArgs e)
         {
             string fileName = textBox1.Text;
             bool found = false;
+            string disk = comboBox1.SelectedItem.ToString();
+            string sourcePath = Path.Combine(disk, fileName);
+            string destDisk = (disk == @"C:\") ? @"D:\" : @"C:\";
+            string destPath = Path.Combine(destDisk, Path.GetFileName(sourcePath));
 
-            string c = Path.Combine(@"C:\", fileName);
-            string d = Path.Combine(@"D:\", fileName);
-            foreach (var file in listBox2.Items)
-            {
-                if (file.ToString() == fileName)
-                {
-                    found = true;
-                    break;
-                }
-            }
-            if (!found)
+            ListBox sourceListBox = (disk == @"C:\") ? listBox2 : listBox1;
+            ListBox destListBox = (disk == @"C:\") ? listBox1 : listBox2;
+
+            if (!sourceListBox.Items.Contains(fileName))
                 MessageBox.Show("File not found");
             else
             {
-                if (Directory.Exists(c))
+                if (Directory.Exists(sourcePath))
                 {
-                    DirectoryCopy(c, d,true);
-                    listBox2.Items.Remove(fileName);
-                    listBox1.Items.Add(fileName);
-                    // Directory.Delete(c);
-                    MessageBox.Show("File moved from C to D!");
+                    try
+                    {
+                        DirectoryCopy(sourcePath, destPath, true);
+                        Directory.Delete(sourcePath, true);
+                        sourceListBox.Items.Remove(fileName);
+                        destListBox.Items.Add(fileName);
+                        MessageBox.Show($"File moved from {disk} to {destDisk}!");
+
+                    }
+                    catch (UnauthorizedAccessException)
+                    {
+                        MessageBox.Show("Access denied! Cannot move this folder.");
+                    }
+                    catch (Exception ex)
+                    {
+                        MessageBox.Show(ex.Message);
+                    }
+
+                }
+            }
+        }
+        private void button2_Click(object sender, EventArgs e)
+        {
+            string fileName = textBox1.Text;
+            bool found = false;
+            string disk = comboBox1.SelectedItem.ToString();
+            string sourcePath = Path.Combine(disk, fileName);
+            string destDisk = (disk == @"C:\") ? @"D:\" : @"C:\";
+            string destPath = Path.Combine(destDisk, Path.GetFileName(sourcePath));
+
+            ListBox sourceListBox = (disk == @"C:\") ? listBox2 : listBox1;
+            ListBox destListBox = (disk == @"C:\") ? listBox1 : listBox2;
+
+            if (!sourceListBox.Items.Contains(fileName))
+                MessageBox.Show("File not found");
+            else
+            {
+                if (Directory.Exists(sourcePath))
+                {
+                    DirectoryCopy(sourcePath, destPath, true);
+                    destListBox.Items.Add(fileName);
+                    MessageBox.Show($"File copied from {disk} to {destDisk}!");
                 }
             }
         }
@@ -80,6 +117,7 @@ namespace WinFormsApp1
             foreach (FileInfo file in files)
             {
                 string tempPath = Path.Combine(destDir, file.Name);
+
                 file.CopyTo(tempPath, true);
             }
             if (copySubDirs)
@@ -91,35 +129,6 @@ namespace WinFormsApp1
                 }
             }
         }
-
-        private void button2_Click(object sender, EventArgs e)
-        {
-            string fileName = textBox1.Text;
-            bool found = false;
-
-            string c = Path.Combine(@"C:\", fileName);
-            string d = Path.Combine(@"D:\", fileName);
-            foreach (var file in listBox2.Items)
-            {
-                if (file.ToString() == fileName)
-                {
-                    found = true;
-                    break;
-                }
-            }
-            if (!found)
-                MessageBox.Show("File not found");
-            else
-            {
-                if (Directory.Exists(c))
-                {  
-                    DirectoryCopy(c, d, true);
-                    listBox1.Items.Add(fileName);
-                    MessageBox.Show("File copied from C to D!");
-                }
-            }
-        }
-
         private void label1_Click(object sender, EventArgs e)
         {
 
@@ -141,6 +150,11 @@ namespace WinFormsApp1
         }
 
         private void label4_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void listBox2_SelectedIndexChanged(object sender, EventArgs e)
         {
 
         }
